@@ -8,6 +8,8 @@ interface HeaderProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   activeAlertCount: number;
+  isDemoMode: boolean;
+  onToggleDemoMode: () => void;
 }
 
 interface NavTabItem {
@@ -22,6 +24,8 @@ export const Header: React.FC<HeaderProps> = ({
   activeTab,
   onTabChange,
   activeAlertCount,
+  isDemoMode,
+  onToggleDemoMode,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -72,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
             {/* Subtle demo data indicator per guideline (text only, no flashy badge/icon) */}
             <span className="text-neutral-400 border-l border-neutral-700 pl-3">
-              Demo data environment
+              {isDemoMode ? 'Demo mode' : 'Public user mode'}
             </span>
           </div>
         </div>
@@ -145,6 +149,14 @@ export const Header: React.FC<HeaderProps> = ({
               Report Incident
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={onToggleDemoMode}
+            className="hidden sm:inline-flex items-center justify-center px-3 py-2 border border-neutral-300 hover:bg-neutral-100 text-neutral-700 font-semibold text-xs rounded-xs transition-colors"
+          >
+            {isDemoMode ? 'Exit Demo Mode' : 'Try Demo Mode'}
+          </button>
 
           {/* Mobile menu button */}
           <button
@@ -225,6 +237,17 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             </div>
           )}
+
+          <button
+            type="button"
+            onClick={() => {
+              onToggleDemoMode();
+              setMobileMenuOpen(false);
+            }}
+            className="w-full mt-2 py-2.5 border border-neutral-300 hover:bg-neutral-100 text-neutral-700 font-semibold text-sm rounded-xs text-center"
+          >
+            {isDemoMode ? 'Exit Demo Mode' : 'Try Demo Mode'}
+          </button>
         </div>
       )}
     </header>
