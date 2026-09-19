@@ -1,0 +1,6 @@
+{
+  "name": "Disaster Response & React",
+  "description": "A public emergency response platform providing live satellite incident maps, community verification, early warning alerts, authority management, and AI emergency assistance.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
