@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IncidentType, IncidentSeverity, UserLocation } from '../types';
 import { incidentStore } from '../services/incidentStore';
-import { MapPin, Navigation, Upload, CheckCircle2, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Camera, ImagePlus, Navigation, CheckCircle2 } from 'lucide-react';
 
 interface ReportIncidentPageProps {
   userLocation: UserLocation;
@@ -51,11 +51,13 @@ export const ReportIncidentPage: React.FC<ReportIncidentPageProps> = ({
     const file = files[0];
     const reader = new FileReader();
     reader.onload = (event) => {
-      if (event.target?.result) {
-        setPhotos([event.target.result as string, ...photos]);
+      const result = event.target?.result;
+      if (result) {
+        setPhotos((currentPhotos) => [result as string, ...currentPhotos]);
       }
     };
     reader.readAsDataURL(file);
+    e.target.value = '';
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -310,23 +312,38 @@ export const ReportIncidentPage: React.FC<ReportIncidentPageProps> = ({
           <div className="border-2 border-dashed border-neutral-300 rounded-xs p-6 text-center hover:border-neutral-400 transition-colors">
             <input
               type="file"
-              id="evidence-file-input"
+              id="evidence-gallery-input"
               accept="image/*,video/*"
               onChange={handleFileUpload}
               className="hidden"
             />
-            <label
-              htmlFor="evidence-file-input"
-              className="cursor-pointer inline-flex flex-col items-center justify-center space-y-2"
-            >
-              <Upload className="w-8 h-8 text-neutral-500" />
-              <div className="text-xs font-bold text-neutral-800">
-                Click to attach photo from device camera or gallery
-              </div>
-              <div className="text-[11px] text-neutral-500">
-                Supports JPG, PNG, MP4 up to 15MB
-              </div>
-            </label>
+            <input
+              type="file"
+              id="evidence-camera-input"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <label
+                htmlFor="evidence-camera-input"
+                className="cursor-pointer inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-3 bg-red-700 hover:bg-red-800 text-white text-xs font-bold uppercase tracking-wide rounded-xs transition-colors"
+              >
+                <Camera className="w-4 h-4" />
+                Take a photo
+              </label>
+              <label
+                htmlFor="evidence-gallery-input"
+                className="cursor-pointer inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-3 border border-neutral-300 hover:bg-neutral-50 text-neutral-800 text-xs font-bold uppercase tracking-wide rounded-xs transition-colors"
+              >
+                <ImagePlus className="w-4 h-4" />
+                Choose from device
+              </label>
+            </div>
+            <div className="text-[11px] text-neutral-500 mt-3">
+              Camera photos and JPG, PNG, MP4 files up to 15MB are supported.
+            </div>
           </div>
 
           {photos.length > 0 && (
