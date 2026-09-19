@@ -14,7 +14,6 @@ import { Phone, Shield, RefreshCw } from 'lucide-react';
 
 export default function App() {
   const [currentRole, setCurrentRole] = useState<UserRole>('citizen');
-  const [isDemoMode, setIsDemoMode] = useState(false);
   const [activeTab, setActiveTab] = useState<string>('home');
   const [incidents, setIncidents] = useState<Incident[]>(incidentStore.getIncidents());
   const [userLocation, setUserLocation] = useState<UserLocation>(incidentStore.getUserLocation());
@@ -41,28 +40,12 @@ export default function App() {
   };
 
   const handleResetData = () => {
-    if (isDemoMode && window.confirm('Reset all incidents and reports to the demo baseline?')) {
+    if (window.confirm('Reset all incidents and reports to initial demo baseline?')) {
       incidentStore.resetToDemoData();
       setIncidents(incidentStore.getIncidents());
       setUserLocation(incidentStore.getUserLocation());
       setAlerts(incidentStore.getAlerts());
     }
-  };
-
-  const handleToggleDemoMode = () => {
-    if (isDemoMode) {
-      setIsDemoMode(false);
-      setActiveTab('home');
-      return;
-    }
-
-    incidentStore.resetToDemoData();
-    setIncidents(incidentStore.getIncidents());
-    setUserLocation(incidentStore.getUserLocation());
-    setAlerts(incidentStore.getAlerts());
-    setIsDemoMode(true);
-    setCurrentRole('citizen');
-    setActiveTab('home');
   };
 
   // Open verified or newly reported incident on map
@@ -91,8 +74,6 @@ export default function App() {
         activeTab={activeTab}
         onTabChange={(tab) => setActiveTab(tab)}
         activeAlertCount={activeAlertCount}
-        isDemoMode={isDemoMode}
-        onToggleDemoMode={handleToggleDemoMode}
       />
 
       {/* Main Content Area */}
@@ -204,20 +185,19 @@ export default function App() {
               Helplines: Police/Medical <strong>112</strong> | Disaster Control <strong>1077</strong>
             </span>
             <span className="text-neutral-300">|</span>
-            {isDemoMode && (
-              <>
-                <span className="text-neutral-400">Demo scenario active</span>
-                <button
-                  type="button"
-                  onClick={handleResetData}
-                  className="text-neutral-500 hover:text-neutral-900 underline flex items-center gap-1 ml-2"
-                  title="Reset state to original demo incidents"
-                >
-                  <RefreshCw className="w-3 h-3" />
-                  <span>Reset demo state</span>
-                </button>
-              </>
-            )}
+            {/* Subtle text notice per prompt instructions: "Demo data where appropriate, never a flashy demo badge or icon" */}
+            <span className="text-neutral-400">
+              Demo data environment
+            </span>
+            <button
+              type="button"
+              onClick={handleResetData}
+              className="text-neutral-500 hover:text-neutral-900 underline flex items-center gap-1 ml-2"
+              title="Reset state to original demo incidents"
+            >
+              <RefreshCw className="w-3 h-3" />
+              <span>Reset demo state</span>
+            </button>
           </div>
         </div>
       </footer>
